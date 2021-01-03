@@ -1,3 +1,7 @@
+![Build iOS adhoc](https://github.com/lolevsky/react-native-ci/workflows/Build%20iOS%20adhoc/badge.svg)
+![Build Android adhoc](https://github.com/lolevsky/react-native-ci/workflows/Build%20Android%20adhoc/badge.svg)
+![Test adhoc](https://github.com/lolevsky/react-native-ci/workflows/Test%20adhoc/badge.svg)
+
 # Github Actions
 Automation of your project is important! In this repository you can find React native example project of CI configuration using [Github actions](https://docs.github.com/en/free-pro-team@latest/actions).
 
