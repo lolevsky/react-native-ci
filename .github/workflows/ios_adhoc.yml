@@ -1,0 +1,69 @@
+name: Build iOS adhoc
+
+on:
+  workflow_dispatch:
+    inputs:
+      comments:
+        description: 'Comments'
+        required: true
+        default: 'Manual build Actions'
+
+jobs:
+  build-ios-adhoc:
+    runs-on: macOS-latest
+    steps:
+      - name: Getting the repo
+        uses: actions/checkout@v2
+      - name: Installing node
+        uses: actions/setup-node@v1
+      - name: Install React Native CLI
+        run: |
+          yarn global add react-native-cli
+      - name: Install yarn dependencies
+        run: |
+          yarn install
+      - name: Building bundle
+        run: |
+          yarn react-native bundle --platform ios --dev false --entry-file index.js --bundle-output ios/main.jsbundle --assets-dest ios
+      - name: Install pod dependencies
+        run: |
+          cd ios && pod install
+      - name: Update build number
+        run: |
+          cd ios
+          agvtool new-marketing-version 1.0.0
+          agvtool new-version -all ${{github.run_number}}
+      - name: Build ios
+        uses: yukiarrr/ios-build-action@v1.3.1
+        with:
+          project-path: ios/react_native_actions.xcodeproj
+          workspace-path: ios/react_native_actions.xcworkspace
+          team-id: ${{ secrets.TEAM_ID }}
+          p12-base64: ${{ secrets.P12_BASE64 }}
+          mobileprovision-base64: ${{ secrets.AD_HOC_MOBILEPROVISION_BASE64 }}
+          code-signing-identity: ${{ secrets.AD_HOC_CODE_SIGNING_IDENTITY }}
+          export-method: ad-hoc
+          output-path: output/output.ipa
+          update-targets: react_native_actions
+          scheme: react_native_actions
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: artifact
+          path: output/output.ipa
+
+  upload-ios:
+    needs: build-ios-adhoc
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: artifact
+      - name: upload artifact to Firebase App Distribution
+        uses: wzieba/Firebase-Distribution-Github-Action@v1
+        with:
+          appId: ${{secrets.FIREBASE_APP_ID_IOS}}
+          token: ${{secrets.FIREBASE_TOKEN}}
+          groups: ios_testers
+          file: output.ipa
