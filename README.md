@@ -30,7 +30,7 @@ In order to sign your build and upload to [Firebase distribution](https://fireba
 
 ### Android keystore
 You can generate a new one or use existing one. 
-* **STAGING_KEYSTORE** - Need to export it to base64, ```cat my-release-key.keystore | base64 > encoded.txt``` and cope the file content to the secret.
+* **STAGING_KEYSTORE** - Need to export it to base64, ```cat my-release-key.keystore | base64 > my-release-key-base64.txt``` and cope the file content to the secret.
 * **STAGING_KEYSTORE_ALIAS** - Alias name of the keystore.
 * **STAGING_KEYSTORE_ALIAS_PASSPHRASE** - Alias password of the keystore.
 * **STAGING_KEYSTORE_PASSPHRASE** - Keystore password.
