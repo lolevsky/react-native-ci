@@ -34,7 +34,7 @@ jobs:
           agvtool new-marketing-version 1.0.0
           agvtool new-version -all ${{github.run_number}}
       - name: Build ios
-        uses: yukiarrr/ios-build-action@v1.3.1
+        uses: yukiarrr/ios-build-action@v1.3.2
         with:
           project-path: ios/react_native_actions.xcodeproj
           workspace-path: ios/react_native_actions.xcworkspace
